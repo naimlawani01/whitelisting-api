@@ -41,6 +41,7 @@
 			            <workerType>${vCore}</workerType>
 			            <workers>${workers}</workers>
 			        </cloudHubDeployment>
+					<classifier>mule-application</classifier>
 			    </configuration>
 			</plugin>
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="whitelistingFlow" doc:id="5da16771-2fae-446a-8968-d658772e9626" >
+		<http:listener doc:name="Listener" doc:id="1963c3fd-2b08-4506-84c6-0039f8e57a92" config-ref="HTTP_Listener_config" path="/user-profile"/>
+		<ee:transform doc:name="Transform Message" doc:id="55dcb1cf-e2d0-417a-9283-687ef3ebbdb0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"firstName": "Gilles",
+	"lastName": "Dehaut",
+	"allowedBusinessUnits": ["lu", "be", "ch"]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="ae2028af-a7cc-4803-8c9a-58af467c1b1c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var list = p("businessUnitsWhitelist")
+---
+payload update {
+  case allowedBusinessUnits at .allowedBusinessUnits -> 
+    allowedBusinessUnits filter ((item, index) -> list splitBy "," contains item)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

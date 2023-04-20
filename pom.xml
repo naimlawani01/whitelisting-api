@@ -39,7 +39,7 @@
 				      <password>Najath0125.@</password>
 				      <environment>Sandbox</environment>
 				    </armDeployment>
-				</configuration>
+			    </configuration>
 			</plugin>
 
 		</plugins>
